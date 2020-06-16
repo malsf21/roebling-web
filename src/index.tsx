@@ -5,13 +5,16 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 
 import config from './lib/firebase';
-import * as firebase from "firebase/app";
+
+const firebase = require("firebase");
+require("firebase/firestore");
 
 firebase.initializeApp(config);
+let db = firebase.firestore();
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <App db={db} />
   </React.StrictMode>,
   document.getElementById('root')
 );

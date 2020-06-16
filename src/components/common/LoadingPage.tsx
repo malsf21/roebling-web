@@ -2,6 +2,7 @@ import React from "react";
 
 class LoadingPage extends React.Component {
     render = () => {
+        document.title = `loading...`;
         return (
             <section className="hero is-light is-fullheight">
                 <div className="hero-body">

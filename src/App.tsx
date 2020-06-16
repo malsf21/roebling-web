@@ -6,6 +6,7 @@ import {
   Link
 } from "react-router-dom";
 
+import Home from './components/Home/Home';
 import LoadingPage from './components/common/LoadingPage';
 import Login from './components/Login/Login';
 
@@ -15,34 +16,72 @@ import "firebase/auth";
 import './App.sass';
 import './App.css';
 
-type AppProps = {};
+type AppProps = {
+  db: firebase.firestore.Firestore,
+};
 type AppState = { 
   checkedAuth: boolean,
   loggedIn: boolean,
+  displayName: string,
+  homeName: string,
+  selectedHome: string,
+  user: string,
+};
+
+type User = {
+  name: string,
+  selectedHome: string,
 };
 
 class App extends React.Component<AppProps, AppState> {
-  constructor(props: any){
+  authListener: any;
+  unsubscribeUser: any;
+  constructor(props: AppProps){
     super(props);
     this.state = {
       checkedAuth: false,
       loggedIn: false,
+      displayName: "",
+      homeName: "",
+      selectedHome: "",
+      user: "",
     }
+    this.authListener = () => {return;};
+    this.unsubscribeUser = () => {return;};
   }
 
   componentDidMount = () => {
-    firebase.auth().onAuthStateChanged(async (user) => {
+    this.authListener = firebase.auth().onAuthStateChanged(async (user) => {
       await this.onAuthHandler(user);
     });
   }; 
 
+  componentWillUnmount = () => {
+    this.authListener();
+    this.unsubscribeUser();
+  }
+
   onAuthHandler = async (user: any) => {
-    console.log("checking auth");
     if (user) {
-      console.log("found user");
-      this.setState({ checkedAuth: true, loggedIn: true });
+      let userRef = this.props.db.collection("users").doc(user.uid);
+      userRef.get().then((doc) => {
+        let currentUser = doc.data() as User;
+        this.setState({ 
+          checkedAuth: true, 
+          loggedIn: true,
+          user: user.uid,
+          displayName: currentUser.name,
+          selectedHome: currentUser.selectedHome
+        });
+        this.unsubscribeUser = this.props.db.collection("users").doc(user.uid).onSnapshot((doc) => {
+          let currentUser = doc.data() as User;
+          this.setState({
+            displayName: currentUser.name,
+            selectedHome: currentUser.selectedHome
+          })
+        });
+      })
     } else {
-      console.log("no user found");
       this.setState({ checkedAuth: true, loggedIn: false });
     }
   };
@@ -75,7 +114,7 @@ class App extends React.Component<AppProps, AppState> {
           <div className="navbar-item has-dropdown is-hoverable">
             {/* eslint-disable-next-line */}
             <a className="navbar-link" role="button">
-              matt
+              {this.state.displayName}
             </a>
 
             <div className="navbar-dropdown is-right">
@@ -95,7 +134,7 @@ class App extends React.Component<AppProps, AppState> {
   }
   render = () => {
     if (!this.state.checkedAuth){
-      return <LoadingPage/>;
+      return <LoadingPage />;
     }
     if (!this.state.loggedIn){
       return <Login tryLogin={this.tryLogin} />
@@ -112,15 +151,27 @@ class App extends React.Component<AppProps, AppState> {
               of them to render at a time
             */}
             <Switch>
-              <Route exact path="/">
-                A
-              </Route>
-              <Route path="/about">
-                C
-              </Route>
-              <Route path="/dashboard">
-                F
-              </Route>
+              <Route exact path="/"
+                render={(props) => (
+                  <Home 
+                    db={this.props.db}
+                    homeid={this.state.selectedHome}
+                    user={this.state.user}
+                    displayName={this.state.displayName}
+                  />
+                )}
+              />
+              <Route
+                path="/h/:homeid/home"
+                render={(props) => (
+                  <Home 
+                    db={this.props.db}
+                    homeid={props.match.params.homeid}
+                    user={this.state.user}
+                    displayName={this.state.displayName}
+                  />
+                )}
+              />
             </Switch>
         </Router>
       </div>
