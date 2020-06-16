@@ -1,5 +1,3 @@
-import * as firebase from 'firebase';
-
 const config = {
     apiKey: "AIzaSyBudAEATUpeECdlMSVktpuwXSMTB3jXAyk",
     authDomain: "roebling-e3a34.firebaseapp.com",
@@ -10,4 +8,4 @@ const config = {
     appId: "1:685150714993:web:fd9d8e60878ee10b216fd0"
 };
 
-firebase.initializeApp(config);
+export default config;
