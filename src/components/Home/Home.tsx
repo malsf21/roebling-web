@@ -41,7 +41,6 @@ class Login extends React.Component<HomeProps,HomeState> {
         })
     }
     render = () => {
-        console.log(this.props.homeid);
         return (
             <div>
                 <section className="hero is-light">

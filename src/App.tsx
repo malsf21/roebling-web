@@ -85,6 +85,8 @@ class App extends React.Component<AppProps, AppState> {
         }
         else{
           // the user doesn't exist yet; let's pre-fill some stuff:
+          // TODO: standardize default values
+          // TODO: somehow get email and display name? might want to instead shift logic to user creation
           userRef.set({
             homes: 0,
             name: "owo uwu",
@@ -120,6 +122,7 @@ class App extends React.Component<AppProps, AppState> {
     this.setState({ checkedAuth: false });
     firebase.auth().createUserWithEmailAndPassword(email, password)
     .then(() => {
+      // want to do user ops here, but no way to consistently query UID outside of auth handler
       console.log('user created');
     })
     .catch(function(error) {
@@ -143,7 +146,7 @@ class App extends React.Component<AppProps, AppState> {
     let createBatch = this.props.db.batch();
     let sluggedName = convertToSlug(homeName);
 
-    // to-do: need to check if home already exists
+    // TODO: need to check if home already exists
 
     let userRef = this.props.db.collection("users").doc(uid);
     createBatch.update(userRef, {
@@ -198,6 +201,7 @@ class App extends React.Component<AppProps, AppState> {
                 account
               </Link>
               <hr className="navbar-divider" />
+              {/* TODO: this button's alignment is not working as intended */}
               <button className="navbar-item button is-danger" onClick={this.tryLogout}>
                 sign out
               </button>
@@ -252,6 +256,7 @@ class App extends React.Component<AppProps, AppState> {
                 )}
               />
             </Switch>
+            { /* TODO: fall-through 404 */}
         </Router>
       </div>
     );

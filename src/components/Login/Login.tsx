@@ -23,7 +23,6 @@ class Login extends React.Component<LoginProps,LoginState> {
         });
     }
     render = () => {
-        document.title = `Login to Roebling`;
         return (
             <section className="hero is-light is-fullheight">
                 <div className="hero-body">

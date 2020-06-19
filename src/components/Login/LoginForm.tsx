@@ -29,10 +29,11 @@ class LoginForm extends React.Component<LoginFormProps, LoginFormState> {
         this.setState({inputPassword: target.value});
     }
     handleLoginSubmit = (): void => {
-        // later: do a check if the email is valid w/ regex
+        // TODO: feedback/erroring
         this.props.tryLogin(this.state.inputEmail, this.state.inputPassword);
     }
     render = () => {
+        document.title = `sign in to roebling`;
         return (
             <div>
                 <div className="field">
