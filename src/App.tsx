@@ -125,15 +125,19 @@ class App extends React.Component<AppProps, AppState> {
       // want to do user ops here, but no way to consistently query UID outside of auth handler
       console.log('user created');
     })
-    .catch(function(error) {
+    .catch((error) => {
+      // Handle Errors here.
+      this.setState({ checkedAuth: true });
       console.error(`Error code: ${error.code}. Error message: ${error.message}`)
     });
   }
 
   tryLogin = (email: string, password: string) => {
     this.setState({ checkedAuth: false });
-    firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
+    firebase.auth().signInWithEmailAndPassword(email, password)
+    .catch((error) => {
       // Handle Errors here.
+      this.setState({ checkedAuth: true });
       console.error(`Error code: ${error.code}. Error message: ${error.message}`)
     });
   }
