@@ -72,14 +72,36 @@ class App extends React.Component<AppProps, AppState> {
     if (user) {
       let userRef = this.props.db.collection("users").doc(user.uid);
       userRef.get().then((doc) => {
-        let currentUser = doc.data() as User;
-        this.setState({ 
-          checkedAuth: true, 
-          loggedIn: true,
-          user: user.uid,
-          displayName: currentUser.name,
-          selectedHome: currentUser.selectedHome
-        });
+        if (doc.exists){
+          // user already exists, let's load them into state
+          let currentUser = doc.data() as User;
+          this.setState({ 
+            checkedAuth: true, 
+            loggedIn: true,
+            user: user.uid,
+            displayName: currentUser.name,
+            selectedHome: currentUser.selectedHome
+          });
+        }
+        else{
+          // the user doesn't exist yet; let's pre-fill some stuff:
+          userRef.set({
+            homes: 0,
+            name: "owo uwu",
+            selectedHome: ""
+          }).then(() => {
+            this.setState({ 
+              checkedAuth: true, 
+              loggedIn: true,
+              user: user.uid,
+              displayName: "owo uwu",
+              selectedHome: ""
+            });
+          })
+          .catch(function(error) {
+            console.error(`Error code: ${error.code}. Error message: ${error.message}`)
+          });
+        }
         this.unsubscribeUser = this.props.db.collection("users").doc(user.uid).onSnapshot((doc) => {
           let currentUser = doc.data() as User;
           this.setState({
@@ -95,10 +117,18 @@ class App extends React.Component<AppProps, AppState> {
   };
 
   tryCreateUser = (email: string, password: string) => {
-    // todo
+    this.setState({ checkedAuth: false });
+    firebase.auth().createUserWithEmailAndPassword(email, password)
+    .then(() => {
+      console.log('user created');
+    })
+    .catch(function(error) {
+      console.error(`Error code: ${error.code}. Error message: ${error.message}`)
+    });
   }
 
   tryLogin = (email: string, password: string) => {
+    this.setState({ checkedAuth: false });
     firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
       // Handle Errors here.
       console.error(`Error code: ${error.code}. Error message: ${error.message}`)
