@@ -1,5 +1,8 @@
 import React from "react";
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faEnvelope, faLock } from '@fortawesome/free-solid-svg-icons'
+
 type LoginFormProps = {
     toggleForm: () => void,
     tryLogin: (email: string, password: string) => void
@@ -47,7 +50,7 @@ class LoginForm extends React.Component<LoginFormProps, LoginFormState> {
                             onChange={this.handleEmailChange} 
                         />
                         <span className="icon is-small is-left">
-                            <i className="fas fa-envelope"></i>
+                            <FontAwesomeIcon icon={faEnvelope} />
                         </span>
                     </div>
                     {
@@ -63,8 +66,8 @@ class LoginForm extends React.Component<LoginFormProps, LoginFormState> {
                             value={this.state.inputPassword}
                             onChange={this.handlePasswordChange} 
                         />
-                        <span className="icon is-small is-left">
-                            <i className="fas fa-envelope"></i>
+                        <span className="icon is-large is-left">
+                            <FontAwesomeIcon icon={faLock} size="lg" fixedWidth pull="right"/>
                         </span>
                     </div>
                     {
