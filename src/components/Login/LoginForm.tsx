@@ -1,6 +1,7 @@
 import React from "react";
 
 type LoginFormProps = {
+    toggleForm: () => void,
     tryLogin: (email: string, password: string) => void
 };
 type LoginFormState = { 
@@ -74,7 +75,7 @@ class LoginForm extends React.Component<LoginFormProps, LoginFormState> {
                         <button className="button is-link" onClick={this.handleLoginSubmit}>sign in</button>
                     </div>
                     <div className="control">
-                        <button className="button is-link is-light">create an account instead</button>
+                        <button className="button is-link is-light" onClick={this.props.toggleForm}>create an account instead</button>
                     </div>
                 </div>
             </div>

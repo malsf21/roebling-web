@@ -86,6 +86,10 @@ class App extends React.Component<AppProps, AppState> {
     }
   };
 
+  tryCreateUser = (email: string, password: string) => {
+    // todo
+  }
+
   tryLogin = (email: string, password: string) => {
     firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
       // Handle Errors here.
@@ -137,7 +141,7 @@ class App extends React.Component<AppProps, AppState> {
       return <LoadingPage />;
     }
     if (!this.state.loggedIn){
-      return <Login tryLogin={this.tryLogin} />
+      return <Login tryCreateUser={this.tryCreateUser} tryLogin={this.tryLogin} />
     }
     return (
       <div className="App">

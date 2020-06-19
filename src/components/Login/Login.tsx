@@ -6,6 +6,7 @@ import LoginForm from './LoginForm';
 
 
 type LoginProps = {
+    tryCreateUser: (email: string, password: string) => void,
     tryLogin: (email: string, password: string) => void
 };
 type LoginState = { 
@@ -15,6 +16,11 @@ type LoginState = {
 class Login extends React.Component<LoginProps,LoginState> {
     state = {
         showCreate: false,
+    }
+    toggleForm = () => {
+        this.setState((prevState: LoginState) => {
+            return ({showCreate: !prevState.showCreate})
+        });
     }
     render = () => {
         document.title = `Login to Roebling`;
@@ -32,8 +38,8 @@ class Login extends React.Component<LoginProps,LoginState> {
                                 </h2>
                                 {
                                     this.state.showCreate ? 
-                                        <CreateUserForm /> :
-                                        <LoginForm tryLogin={this.props.tryLogin} />
+                                        <CreateUserForm toggleForm={this.toggleForm} tryCreateUser={this.props.tryCreateUser}/> :
+                                        <LoginForm toggleForm={this.toggleForm} tryLogin={this.props.tryLogin} />
                                 }
                             </div>
                             <div className="column">
