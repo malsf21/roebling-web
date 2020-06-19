@@ -28,6 +28,7 @@ class Login extends React.Component<HomeProps,HomeState> {
         }
     }
     componentDidMount = () => {
+        // if selectedHome changes, we need to recall this. probably some sort of componentWillUpdate or smth?
         document.title = `${this.props.displayName} @ ${this.props.homeid}`;
         this.props.db.collection(`homes/${this.props.homeid}/items`).onSnapshot((collectionSnapshot) => {
             let items: Item[] = [];

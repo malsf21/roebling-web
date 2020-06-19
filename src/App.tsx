@@ -9,9 +9,12 @@ import {
 import Home from './components/Home/Home';
 import LoadingPage from './components/common/LoadingPage';
 import Login from './components/Login/Login';
+import Onboard from './components/Onboard/Onboard';
 
 import * as firebase from "firebase/app";
 import "firebase/auth";
+
+import convertToSlug from './lib/convertToSlug';
 
 import './App.sass';
 import './App.css';
@@ -26,11 +29,14 @@ type AppState = {
   homeName: string,
   selectedHome: string,
   user: string,
+  onboarded: boolean
 };
 
 type User = {
   name: string,
   selectedHome: string,
+  homes: number,
+  email: string
 };
 
 class App extends React.Component<AppProps, AppState> {
@@ -45,6 +51,7 @@ class App extends React.Component<AppProps, AppState> {
       homeName: "",
       selectedHome: "",
       user: "",
+      onboarded: false,
     }
     this.authListener = () => {return;};
     this.unsubscribeUser = () => {return;};
@@ -77,7 +84,8 @@ class App extends React.Component<AppProps, AppState> {
           let currentUser = doc.data() as User;
           this.setState({
             displayName: currentUser.name,
-            selectedHome: currentUser.selectedHome
+            selectedHome: currentUser.selectedHome,
+            onboarded: currentUser.homes !== 0
           })
         });
       })
@@ -99,6 +107,40 @@ class App extends React.Component<AppProps, AppState> {
 
   tryLogout = (): void => {
     firebase.auth().signOut();
+  }
+
+  tryCreateHome = (uid: string, homeName: string) => {
+    let createBatch = this.props.db.batch();
+    let sluggedName = convertToSlug(homeName);
+
+    // to-do: need to check if home already exists
+
+    let userRef = this.props.db.collection("users").doc(uid);
+    createBatch.update(userRef, {
+      selectedHome: sluggedName,
+      homes: firebase.firestore.FieldValue.increment(1),
+    });
+
+    let homeRef = this.props.db.collection("homes").doc(sluggedName);
+    createBatch.set(homeRef, {
+      name: homeName,
+      owner: uid,
+      users: [uid],
+    });
+
+    let itemsRef = this.props.db.collection("homes").doc(sluggedName).collection("items").doc('salt');
+    createBatch.set(itemsRef, {
+      amount: "0",
+      name: "Salt",
+      unit: "g"
+    });
+
+    createBatch.commit().then(() => {
+      // loading maybe?
+    }).catch((error) => {
+      // Handle Errors here.
+      console.error(`Error code: ${error.code}. Error message: ${error.message}`)
+    });
   }
 
   renderHeader = () => {
@@ -142,6 +184,9 @@ class App extends React.Component<AppProps, AppState> {
     }
     if (!this.state.loggedIn){
       return <Login tryCreateUser={this.tryCreateUser} tryLogin={this.tryLogin} />
+    }
+    if (!this.state.onboarded){
+      return <Onboard tryCreateHome={this.tryCreateHome} user={this.state.user} />
     }
     return (
       <div className="App">
