@@ -12,7 +12,8 @@ const bananaBread = {
         6. Gradually pour and mix the dry ingredients into the banana mixture
         7. Pour the batter into the loaf pan and bake for approximately 40-55 minutes (until a toothpick stuck in the middle comes out clean)
         8. Enjoy! :D
-    `
+    `,
+    servings: 8,
 }
 
 const defaultHome = {
