@@ -15,6 +15,7 @@ import * as firebase from "firebase/app";
 import "firebase/auth";
 
 import convertToSlug from './lib/convertToSlug';
+import defaultHome from './constants/defaultHome';
 
 import './App.sass';
 import './App.css';
@@ -171,6 +172,11 @@ class App extends React.Component<AppProps, AppState> {
       name: "Salt",
       unit: "g"
     });
+
+    let recipesRef = this.props.db.collection("homes").doc(sluggedName).collection("recipes").doc('banana-bread');
+    for (let recipe of defaultHome.recipes) {
+      createBatch.set(recipesRef, recipe);
+    }
 
     createBatch.commit().then(() => {
       // loading maybe?

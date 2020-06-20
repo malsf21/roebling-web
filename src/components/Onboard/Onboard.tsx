@@ -80,6 +80,9 @@ class OnboardingPage extends React.Component<OnboardingProps, OnboardingState>{
                             <p className="subtitle">
                                 and that's it! easy, right?
                             </p>
+                            <p>
+                                your new home will come pre-loaded with some fun recipes :)
+                            </p>
                             <button className="button is-success" onClick={this.handleSubmit}>
                                 make this my home
                             </button>
