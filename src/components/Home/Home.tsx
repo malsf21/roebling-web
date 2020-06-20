@@ -1,5 +1,7 @@
 import React from "react";
 
+import IngredientsView from './IngredientsView';
+
 type HomeProps = {
     db: firebase.firestore.Firestore,
     homeid: string,
@@ -7,8 +9,6 @@ type HomeProps = {
     user: string,
 };
 type HomeState = { 
-    showCreate: boolean,
-    retrievedHome: boolean,
     items: Item[],
 };
 
@@ -18,12 +18,10 @@ type Item = {
     unit: string,
 }
 
-class Login extends React.Component<HomeProps,HomeState> {
+class Home extends React.Component<HomeProps,HomeState> {
     constructor(props: HomeProps){
         super(props);
         this.state = {
-            retrievedHome: false,
-            showCreate: false,
             items: [],
         }
     }
@@ -99,52 +97,7 @@ class Login extends React.Component<HomeProps,HomeState> {
                                     </div>
                                 </div>
                                 <div className="column">
-                                    <div className="card">
-                                        <header className="card-header">
-                                            <h3 className="card-header-title">
-                                                Ingredients
-                                            </h3>
-                                        </header>
-                                        <div className="card-content">
-                                            <table className="table">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Name</th>
-                                                        <th>Amount</th>
-                                                        <th>Actions</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    {this.state.items.map((item, index) => {
-                                                        return(
-                                                            <tr key={index}>
-                                                                <td>{item.name}</td>
-                                                                <td>{`${item.amount} ${item.unit !== "item" ? item.unit: ""}`}</td>
-                                                                <td>
-                                                                    <p className="buttons">
-                                                                        <button className="button is-small">+</button>
-                                                                        <button className="button is-small">-</button>
-                                                                        <button className="button is-small">x</button>
-                                                                    </p>
-                                                                </td>
-                                                            </tr>
-                                                        );
-                                                    })}
-                                                    <tr>
-                                                        <td>
-                                                            <input />
-                                                        </td>
-                                                        <td>
-                                                            <input />
-                                                        </td>
-                                                        <td>
-                                                            <button className="button is-small">add</button>
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
+                                    <IngredientsView db={this.props.db} user={this.props.user} homeid={this.props.homeid} items={this.state.items} />
                                 </div>
                             </div>
                         </div>
@@ -155,4 +108,4 @@ class Login extends React.Component<HomeProps,HomeState> {
     }
 }
 
-export default Login;
+export default Home;
