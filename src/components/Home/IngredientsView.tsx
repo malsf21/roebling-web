@@ -104,6 +104,7 @@ class IngredientsView extends React.Component<IngredientsViewProps,IngredientsVi
                                         className="input" 
                                         type="text" 
                                         placeholder="new ingredient"
+                                        value={this.state.newIngredientName}
                                         onChange={this.handleNameChange}
                                     />
                                 </td>
@@ -112,7 +113,7 @@ class IngredientsView extends React.Component<IngredientsViewProps,IngredientsVi
                                         <div className="control">
                                             <input 
                                                 className="input" 
-                                                type="text" 
+                                                type="number" 
                                                 placeholder="amount" 
                                                 value={this.state.newIngredientAmount}
                                                 onChange={this.handleAmountChange}
