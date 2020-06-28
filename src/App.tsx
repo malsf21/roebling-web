@@ -6,6 +6,7 @@ import {
   Link
 } from "react-router-dom";
 
+import Account from './components/Account/Account';
 import Home from './components/Home/Home';
 import LoadingPage from './components/common/LoadingPage';
 import Login from './components/Login/Login';
@@ -195,6 +196,9 @@ class App extends React.Component<AppProps, AppState> {
 
         <div className="navbar-menu">
           <div className="navbar-start">
+            <Link className="navbar-item" to="/">
+              home
+            </Link>
             <a className="navbar-item" href="https://github.com/malsf21/roebling-web" target="_blank" rel="noreferrer noopener">
               docs
             </a>
@@ -207,7 +211,7 @@ class App extends React.Component<AppProps, AppState> {
             </a>
 
             <div className="navbar-dropdown is-right">
-              <Link className="navbar-item" to="/">
+              <Link className="navbar-item" to="/account">
                 account
               </Link>
               <hr className="navbar-divider" />
@@ -260,6 +264,17 @@ class App extends React.Component<AppProps, AppState> {
                   <Home 
                     db={this.props.db}
                     homeid={props.match.params.homeid}
+                    user={this.state.user}
+                    displayName={this.state.displayName}
+                  />
+                )}
+              />
+              <Route
+                path="/account"
+                render={(props) => (
+                  <Account 
+                    db={this.props.db}
+                    homeid={this.state.selectedHome}
                     user={this.state.user}
                     displayName={this.state.displayName}
                   />
